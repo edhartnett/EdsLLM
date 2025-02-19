@@ -2,15 +2,15 @@ import tiktoken
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
-import DummyLayerNorm
-import DummyTransformerBlock
+from DummyLayerNorm import DummyLayerNorm
+from DummyTransformerBlock import DummyTransformerBlock
 
 
 class DummyGPTModel(nn.Module):
     def __init__(self, cfg):
         super(DummyGPTModel, self).__init__()
-        self.tok_emb = nn.embedding(cfg["vocab_size"], cfg["emb_dim"])
-        self.pos_emb = nn.embedding(cfg["context_length"], cfg["emb_dim"])
+        self.tok_emb = nn.Embedding(cfg["vocab_size"], cfg["emb_dim"])
+        self.pos_emb = nn.Embedding(cfg["context_length"], cfg["emb_dim"])
         self.drop_emb = nn.Dropout(cfg["drop_rate"])  
 
         self.trf_blocks = nn.Sequential(
@@ -31,27 +31,33 @@ class DummyGPTModel(nn.Module):
         return logits
     
 
-    def main():
-        GPT_CONFIG_124M = {
-            "vocab_size": 50257,
-            "emb_dim": 768,
-            "context_length": 1024,
-            "n_layers": 12,
-            "n_heads": 12,
-            "ffn_dim": 3072,
-            "drop_rate": 0.1,
-            "qkv_bias": False
-        }
-
-        tokenizer = tiktoken.get_encoding("gpt2")
-        batch = []
-        txt1 = "Every effort moves you"
-        txt2 = "Every day holds a"
-        batch.append(torch.tensor(tokenizer.encode(txt1)))
-        batch.append(torch.tensor(tokenizer.encode(txt2)))
-        batch = torch.stack(batch, dim=0)
-        print(txt1)
-        print(batch)
-
-    if __name__=="__main__":
-        main()
+def main():
+    GPT_CONFIG_124M = {
+        "vocab_size": 50257,
+        "emb_dim": 768,
+        "context_length": 1024,
+        "n_layers": 12,
+        "n_heads": 12,
+        "ffn_dim": 3072,
+        "drop_rate": 0.1,
+        "qkv_bias": False
+    }
+    
+    tokenizer = tiktoken.get_encoding("gpt2")
+    batch = []
+    txt1 = "Every effort moves you"
+    txt2 = "Every day holds a"
+    batch.append(torch.tensor(tokenizer.encode(txt1)))
+    batch.append(torch.tensor(tokenizer.encode(txt2)))
+    batch = torch.stack(batch, dim=0)
+    print(txt1)
+    print(batch)
+    
+    torch.manual_seed(123)
+    model = DummyGPTModel(GPT_CONFIG_124M)
+    logits = model(batch)
+    print(logits.shape)
+    print(logits)
+    
+if __name__=="__main__":
+    main()
