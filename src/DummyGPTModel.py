@@ -2,7 +2,7 @@ import tiktoken
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
-from DummyLayerNorm import DummyLayerNorm
+from LayerNorm import DummyLayerNorm
 from DummyTransformerBlock import DummyTransformerBlock
 
 
