@@ -4,6 +4,8 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from LayerNorm import LayerNorm
 from DummyTransformerBlock import DummyTransformerBlock
+import FeedForward as FeedForward
+import GELU as GELU
 
 
 class DummyGPTModel(nn.Module):
@@ -52,6 +54,12 @@ def main():
     batch = torch.stack(batch, dim=0)
     print(txt1)
     print(batch)
+
+    ffn = FeedForward.FeedForward(GPT_CONFIG_124M)
+    x = torch.randn(2, 10, GPT_CONFIG_124M["emb_dim"])
+    y = ffn(x)
+    print(y.shape)
+    print(y)
     
     torch.manual_seed(123)
     model = DummyGPTModel(GPT_CONFIG_124M)
