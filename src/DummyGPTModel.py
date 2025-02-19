@@ -2,7 +2,7 @@ import tiktoken
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
-from LayerNorm import DummyLayerNorm
+from LayerNorm import LayerNorm
 from DummyTransformerBlock import DummyTransformerBlock
 
 
@@ -16,7 +16,7 @@ class DummyGPTModel(nn.Module):
         self.trf_blocks = nn.Sequential(
             *[DummyTransformerBlock(cfg) for _ in range(cfg["n_layers"])])
         
-        self.final_norm = DummyLayerNorm(cfg["emb_dim"])
+        self.final_norm = LayerNorm(cfg["emb_dim"])
         self.out_head = nn.Linear(cfg["emb_dim"], cfg["vocab_size"])
         
     def forward(self, in_idx):
