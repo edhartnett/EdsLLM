@@ -6,6 +6,7 @@ from LayerNorm import LayerNorm
 from DummyTransformerBlock import DummyTransformerBlock
 import FeedForward as FeedForward
 import GELU as GELU
+import TransformerBlock as TransformerBlock
 
 
 class DummyGPTModel(nn.Module):
@@ -62,6 +63,12 @@ def main():
     print(y)
     
     torch.manual_seed(123)
+    x = torch.randn(2, 4, GPT_CONFIG_124M["emb_dim"])
+    block = TransformerBlock.TransformerBlock(GPT_CONFIG_124M)
+    output = block(x)
+    print(output.shape)
+    print(output)
+    
     model = DummyGPTModel(GPT_CONFIG_124M)
     logits = model(batch)
     print(logits.shape)
