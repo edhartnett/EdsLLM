@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from LayerNorm import LayerNorm
-from DummyTransformerBlock import TransformerBlock
+from TransformerBlock import TransformerBlock
 import FeedForward as FeedForward
 import GELU as GELU
 import TransformerBlock as TransformerBlock
