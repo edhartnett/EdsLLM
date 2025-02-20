@@ -73,6 +73,9 @@ def main():
     logits = model(batch)
     print(logits.shape)
     print(logits)
+
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"Total params: {total_params}")
     
 if __name__=="__main__":
     main()
