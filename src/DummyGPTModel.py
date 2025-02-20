@@ -3,21 +3,21 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from LayerNorm import LayerNorm
-from DummyTransformerBlock import DummyTransformerBlock
+from DummyTransformerBlock import TransformerBlock
 import FeedForward as FeedForward
 import GELU as GELU
 import TransformerBlock as TransformerBlock
 
 
-class DummyGPTModel(nn.Module):
+class EdsGPTModel(nn.Module):
     def __init__(self, cfg):
-        super(DummyGPTModel, self).__init__()
+        super(EdsGPTModel, self).__init__()
         self.tok_emb = nn.Embedding(cfg["vocab_size"], cfg["emb_dim"])
         self.pos_emb = nn.Embedding(cfg["context_length"], cfg["emb_dim"])
         self.drop_emb = nn.Dropout(cfg["drop_rate"])  
 
         self.trf_blocks = nn.Sequential(
-            *[DummyTransformerBlock(cfg) for _ in range(cfg["n_layers"])])
+            *[TransformerBlock.TransformerBlock(cfg) for _ in range(cfg["n_layers"])])
         
         self.final_norm = LayerNorm(cfg["emb_dim"])
         self.out_head = nn.Linear(cfg["emb_dim"], cfg["vocab_size"])
@@ -68,8 +68,8 @@ def main():
     output = block(x)
     print(output.shape)
     print(output)
-    
-    model = DummyGPTModel(GPT_CONFIG_124M)
+
+    model = EdsGPTModel(GPT_CONFIG_124M)
     logits = model(batch)
     print(logits.shape)
     print(logits)
