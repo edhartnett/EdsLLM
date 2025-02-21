@@ -7,7 +7,7 @@ from TransformerBlock import TransformerBlock
 import FeedForward as FeedForward
 import GELU as GELU
 import TransformerBlock as TransformerBlock
-
+import GPTDatasetV1 as GPTDatasetV1
 
 class EdsGPTModel(nn.Module):
     def __init__(self, cfg):
@@ -58,6 +58,13 @@ def generate_text_simple(model, idx, max_new_tokens, context_size):
 
     return idx
     
+def create_dataloader_v1(txt, batch_size=4, max_length=256, stride=128, shuffle=True, drop_last=True, num_workers=0):
+    tokenizer = tiktoken.get_encoding("gpt2")
+    dataset = GPTDatasetV1.GPTDatasetV1(txt, tokenizer, max_length, stride)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, drop_last=drop_last, num_workers=num_workers)
+    return dataloader
+
+
 
 def main():
     GPT_CONFIG_124M = {
@@ -130,5 +137,23 @@ def main():
     with open("the-verdict.txt" , "r") as f:
         text_data = f.read()
     print(text_data[:99])
+
+    #tokenizer = tiktoken.get_encoding("gpt2")
+    encoded2 = tokenizer.encode(text_data)
+    #encoded_tensor = torch.tensor(encoded).unsqueeze(0)
+    print("Encoded input text:", len(encoded2))
+    #print("encoded_tensor.shape:", encoded_tensor.shape)
+
+    train_ratio = 0.9
+    split_idx = int(train_ratio * len(text_data))
+    train_data = text_data[:split_idx]
+    val_data = text_data[split_idx:]
+
+    print("creating dataloader")
+    train_dataloader = create_dataloader_v1(train_data, batch_size=2, max_length=GPT_CONFIG_124M["context_length"], 
+                                            stride=GPT_CONFIG_124M["context_length"], drop_last=True, shuffle=True, num_workers=0)
+    val_dataloader = create_dataloader_v1(val_data, batch_size=2, max_length=GPT_CONFIG_124M["context_length"],
+                                          stride=GPT_CONFIG_124M["context_length"], drop_last=True, shuffle=False, num_workers=0)
+
 if __name__=="__main__":
     main()
