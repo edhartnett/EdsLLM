@@ -122,9 +122,9 @@ def main():
     print("Output length:", len(out[0]))
     print("Output text:", decoded_text)
 
-    # model = EdsGPTModel(GPT_CONFIG_124M)
+  `  # model = EdsGPTModel(GPT_CONFIG_124M)
     # logits = model(batch)
-    # print(logits.shape)
+ `   # print(logits.shape)
     # print(logits)
 
     total_params = sum(p.numel() for p in model.parameters())
