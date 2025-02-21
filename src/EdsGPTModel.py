@@ -131,6 +131,9 @@ def main():
     print(f"Total params: {total_params}")
     total_size_mb = total_params * 4 / 1024 / 1024
     print(f"Total size: {total_size_mb:.2f} MB")
+
+    with open("theverdict.txt" , "r") as f:
+        text_data = f.read()
     
 if __name__=="__main__":
     main()
