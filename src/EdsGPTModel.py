@@ -122,18 +122,13 @@ def main():
     print("Output length:", len(out[0]))
     print("Output text:", decoded_text)
 
-  `  # model = EdsGPTModel(GPT_CONFIG_124M)
-    # logits = model(batch)
- `   # print(logits.shape)
-    # print(logits)
-
     total_params = sum(p.numel() for p in model.parameters())
     print(f"Total params: {total_params}")
     total_size_mb = total_params * 4 / 1024 / 1024
     print(f"Total size: {total_size_mb:.2f} MB")
 
-    with open("theverdict.txt" , "r") as f:
+    with open("the-verdict.txt" , "r") as f:
         text_data = f.read()
-    
+    print(text_data[:99])
 if __name__=="__main__":
     main()
