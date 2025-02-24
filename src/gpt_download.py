@@ -223,7 +223,7 @@ def load_weights_into_gpt(gpt, params):
     gpt.out_head.weight = assign(gpt.out_head.weight, params["wte"])
     
 
-settings, params = download_and_load_gpt2(model_size="124M", models_dir="gpt2")
+settings, params = download_and_load_gpt2(model_size="355M", models_dir="gpt2_355M")
 print(settings.keys())
 print(params.keys())
 print(params["blocks"][0].keys())
@@ -245,6 +245,16 @@ GPT_CONFIG_124M = {
     "drop_rate": 0.1,       # Dropout rate
     "qkv_bias": False       # Query-key-value bias
 }
+
+GPT_CONFIG_355M = {
+    "vocab_size": 50257,    # Vocabulary size
+    "context_length": 1024,  # Shortened context length (orig: 1024)
+    "emb_dim": 1024,         # Embedding dimension
+    "n_heads": 16,          # Number of attention heads
+    "n_layers": 24,         # Number of layers
+    "drop_rate": 0.1,       # Dropout rate
+    "qkv_bias": True       # Query-key-value bias
+}
     
 OTHER_SETTINGS = {
     "learning_rate": 5e-4,
@@ -254,13 +264,13 @@ OTHER_SETTINGS = {
 }
 
 # Copy the base configuration and update with specific model settings
-model_name = "gpt2-small (124M)"  # Example model name
+model_name = "gpt2-xl (1558M)"  # Example model name
 NEW_CONFIG = GPT_CONFIG_124M.copy()
 NEW_CONFIG.update(model_configs[model_name])
 NEW_CONFIG.update({"context_length": 1024, "qkv_bias": True})
 
 print("creating model")
-gpt = EdsGPTModel(NEW_CONFIG)
+gpt = EdsGPTModel(GPT_CONFIG_355M)
 gpt.eval();
 print("loading weights")
 load_weights_into_gpt(gpt, params)
@@ -275,7 +285,7 @@ tokenizer = tiktoken.get_encoding("gpt2")
 print("Generating text")
 token_ids = generate(
     model=gpt,
-    idx=text_to_token_ids("While taking a long walk by the", tokenizer).to(device),
+    idx=text_to_token_ids("For fuck's", tokenizer).to(device),
     max_new_tokens=25,
     context_size=NEW_CONFIG["context_length"],
     top_k=50,
@@ -283,3 +293,4 @@ token_ids = generate(
 )
 
 print("Output text:\n", token_ids_to_text(token_ids, tokenizer))
+print(gpt)
