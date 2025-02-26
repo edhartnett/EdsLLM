@@ -468,4 +468,6 @@ token_ids = generate(
     eos_id=50256,
 )
 generated_text = token_ids_to_text(token_ids, tokenizer)
-print("generated_text:\n", generated_text)
+print("generated_text:\n", generated_text[len(input_text):].strip())
+print("again")
+print("generated_text:\n", generated_text[len(input_text):].strip())
