@@ -203,9 +203,9 @@ def custom_collate_fn(
 
     return inputs_tensor, targets_tensor
 
-inputs, targets = custom_collate_fn(batch)
-print(inputs)
-print(targets)
+# inputs, targets = custom_collate_fn(batch)
+# print(inputs)
+# print(targets)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device:", device)
@@ -265,3 +265,4 @@ for inputs, targets in train_loader:
     print(inputs.shape, targets.shape)
 print(inputs[0])
 print(targets[0])
+
